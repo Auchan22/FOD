@@ -1,0 +1,4 @@
+-> Apellido: Surila-> Nombre: Agustin-> Nro: 1-> Edad: 20-> DNI: 44831461
+-> Apellido: Alvarez-> Nombre: Camila-> Nro: 2-> Edad: 21-> DNI: 44545926
+-> Apellido: Suarez-> Nombre: Pepe-> Nro: 4-> Edad: 72-> DNI: 00
+-> Apellido: Soto-> Nombre: Cecilia-> Nro: 6-> Edad: 51-> DNI: 00

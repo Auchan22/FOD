@@ -1,0 +1,2 @@
+-> Apellido: Suarez-> Nombre: Pepe-> Nro: 4-> Edad: 71-> DNI: 00
+-> Apellido: Soto-> Nombre: Cecilia-> Nro: 6-> Edad: 52-> DNI: 00

@@ -218,6 +218,43 @@ begin
 	end;
 	writeln('-----');
 end;
+procedure exportar(opc: byte; var arch_log: archivo);
+	function faltaDNI(e: empleado): boolean;
+	begin
+		faltaDNI:= e.dni = '00';
+	end;
+	procedure exportarEmpleado(e: empleado; var txt: Text);
+	begin
+		writeln(txt, 
+		'-> Apellido: ',e.apellido,
+		'-> Nombre: ', e.nombre,
+		'-> Nro: ', e.nro,
+		'-> Edad: ', e.edad,
+		'-> DNI: ', e.dni
+		);
+	end;
+var
+	txt: Text;
+	e: empleado;
+begin
+	if(opc = 1) then
+		Assign(txt, 'todo_empleados.txt')
+	else
+		Assign(txt, 'faltaDNIEmpleado.txt');
+	reset(arch_log);
+	rewrite(txt);
+	while not eof(arch_log) do begin
+		read(arch_log, e);
+		if(opc = 1) then
+			exportarEmpleado(e, txt)
+		else begin
+			if(faltaDNI(e)) then 
+				exportarEmpleado(e, txt);
+		end;
+	end;
+	close(arch_log);
+	close(txt);
+end;
 
 procedure ShowMenu(var arch_log: archivo; nombre: string);
 var
@@ -256,11 +293,11 @@ begin
 		end;
 		4:
 		begin
-		
+			exportar(1, arch_log);
 		end;
 		5:
 		begin
-		
+			exportar(2, arch_log);
 		end;
 		else writeln('No se encuentra la opción...');
 	end;
