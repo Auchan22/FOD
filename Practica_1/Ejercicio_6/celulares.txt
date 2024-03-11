@@ -1,0 +1,9 @@
+1042 15000 lg
+120 50 usado
+k4
+4096 24000 moto
+45 50 nuevo
+G6
+2048 18000 moto
+40 50 nuevo
+G3
