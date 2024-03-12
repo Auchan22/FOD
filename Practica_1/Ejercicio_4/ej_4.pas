@@ -44,14 +44,27 @@ begin;
 end;
 procedure CargarArchivo(var arch_log: archivo);
 var
-	e: empleado;
+	e, aux: empleado;
+	ok: boolean;
 begin
 	rewrite(arch_log);
 	writeln('');
 	writeln('-- Iniciando carga --');
 	LeerEmpleado(e);
 	while(e.apellido <> 'fin') do begin
-		write(arch_log, e);
+		ok:= true;
+		while not eof(arch_log) and ok do begin
+			read(arch_log, aux);
+			if(aux.nro = e.nro) then
+				ok:= false;
+		end;
+		if(ok) then begin
+			seek(arch_log, filesize(arch_log));
+			write(arch_log, e);
+			end
+		else
+			writeln('El empleado con el nro ingresado ya existe, cargue otro');
+		seek(arch_log, 0);
 		LeerEmpleado(e);
 		writeln('');
 	end;
@@ -149,16 +162,42 @@ begin
 		else writeln('No se encuentra la opción...');
 	end;
 end;
+function ExisteEmpleado(var arch_log: archivo; e:empleado): boolean;
+var
+	aux: empleado;
+	ok: boolean;
+begin
+	ok:= true;
+	while not eof(arch_log) and ok do begin
+				read(arch_log, aux);
+				if(aux.nro = e.nro) then
+					ok:= false;
+			end;
+	ExisteEmpleado:= ok;
+end;
 procedure AgregarEmpleado(var arch_log: archivo);
 var
-	e: empleado;
+	e, aux: empleado;
+	ok: boolean;
 begin
 	reset(arch_log);
-	seek(arch_log, filesize(arch_log));
+	{seek(arch_log, filesize(arch_log));} //Esta linea no va, ya que nos posiciona sobre el final
 	writeln('-- Iniciando carga --');
 	LeerEmpleado(e);
 	while(e.apellido <> 'fin') do begin
-		write(arch_log, e);
+		ok:= true;
+		while not eof(arch_log) and ok do begin
+			read(arch_log, aux);
+			if(aux.nro = e.nro) then
+				ok:= false;
+		end;
+		if(ok) then begin
+			seek(arch_log, filesize(arch_log)); // Si no existe, lo posicionamos al final y agregamos
+			write(arch_log, e);
+		end
+		else
+			writeln('El empleado con el nro ingresado ya existe, registre otro');
+		seek(arch_log, 0); //Ponemos el puntero en el inicio para que la profima carga, evalua desde la primer pos
 		LeerEmpleado(e);
 		writeln('');
 	end;
