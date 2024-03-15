@@ -7,23 +7,19 @@ un archivo detalle con el código de alumno e información correspondiente a una
 Todos los archivos están ordenados por código de alumno y en el archivo detalle puede
 haber 0, 1 ó más registros por cada alumno del archivo maestro. Se pide realizar un
 programa con opciones para:
-a. Crear el archivo maestro a partir de un archivo de texto llamado “alumnos.txt”.
-b. Crear el archivo detalle a partir de en un archivo de texto llamado “detalle.txt”.
-c. Listar el contenido del archivo maestro en un archivo de texto llamado“reporteAlumnos.txt”.
-d. Listar el contenido del archivo detalle en un archivo de texto llamado
-“reporteDetalle.txt”.
-e. Actualizar el archivo maestro de la siguiente manera:
-i. Si aprobó el final se incrementa en uno la cantidad de materias con final
-aprobado.
-ii. Si aprobó la cursada se incrementa en uno la cantidad de materias aprobadas
-sin final.
-f. Listar en un archivo de texto los alumnos que tengan más de cuatro materias
+a. Actualizar el archivo maestro de la siguiente manera:
+i.Si aprobó el final se incrementa en uno la cantidad de materias con final aprobado.
+ii.Si aprobó la cursada se incrementa en uno la cantidad de materias aprobadas sin
+final.
+b. Listar en un archivo de texto los alumnos que tengan más de cuatro materias
 con cursada aprobada pero no aprobaron el final. Deben listarse todos los campos.
-NOTA: Para la actualización del inciso e) los archivos deben ser recorridos sólo una vez.
+NOTA: Para la actualización del inciso a) los archivos deben ser recorridos sólo una vez.
 }
 
 program ej2_p2;
 uses crt;
+const 
+	valoralto = 999;
 type
 	rango = 0..1;
 	alumno = record
@@ -41,24 +37,48 @@ type
 	end;
 	maestro = file of alumno;
 	detalle = file of a_resumen;
-procedure cargarMaestro(var arch: maestro);
-var
-	a: alumno;
-	txt: Text;
+procedure leer(var arch: detalle; var dato: a_resumen);
 begin
-	writeln('-- Iniciando carga archivo --');
-	Assign(txt, alumnos.txt);
-	reset(txt);
-	rewrite(arch);
-	while not eof(txt) do begin
-		readln(txt, a.codigo, a.apellido, a.nombre, a.cantMsin, a.cantMcon);
-		write(arch, a);
-	end;
-	close(arch);
-	close(txt);
-	writeln('-- Fin carga archivo --');
+	if(not eof(arch)) then
+		read(arch, dato)
+	else
+		dato.codigo := valoralto;
 end;
-procedure
+procedure actualizar(var arch_m: maestro; var arch_d: detalle);
+var
+	aux: a_resumen;
+	a: alumno;
+	cod: integer;
+	tot_cursada, tot_fin: integer;
+begin
+	reset(arch_m);
+	reset(arch_d);
+	read(arch_m, a);
+	leer(arch_d, aux);
+	while(aux.codigo <> valoralto) do begin
+		cod:= aux.codigo;
+		tot_cursada:= 0;
+		tot_fin:= 0;
+		//Agrupamos valores
+		while(aux.codigo = cod) do begin
+			if(aux.fin = 1) then tot_fin := tot_fin + 1;
+			if(aux.cursada = 1) then tot_cursada:= tot_cursada + 1;
+			leer(arch_d, aux);
+		end;
+		//Buscamos registro en el maestro
+		while(a.codigo <> cod) do
+			read(arch_m, a);
+		a.cantMsin:= a.cantMsin + tot_cursada;
+		a.cantMcon:= a.cantMcon + tot_fin;
+		seek(arch_m, filepos(arch_m)-1);
+		write(arch_m, a);
+		
+		if(not eof(arch_m)) then read(arch_m, a);
+	end;
+	close(arch_d);
+	close(arch_m);
+end;
+procedure ShowMenu(opc: char; var arch: maestro)
 BEGIN
 	
 	
