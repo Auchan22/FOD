@@ -159,6 +159,26 @@ begin
 	end;
 	close(arch_m);
 end;
+procedure imprimirDetalle(var arch_d: detalle);
+	procedure ImprimirAlumno(a: a_resumen);
+	begin
+		writeln('-----');
+		writeln('Codigo: ', a.codigo);
+		writeln('Materia: ', a.nombre);
+		writeln('Aprobo final: ', a.fin);
+		writeln('Aprobo cursada: ', a.cursada);
+		writeln('-----');
+	end;
+var
+	a: a_resumen;
+begin
+	reset(arch_d);
+	while(not eof(arch_d))do begin
+		read(arch_d, a);
+		ImprimirAlumno(a);
+	end;
+	close(arch_d);
+end;
 procedure generarArchivo(var arch_m: maestro);
 var
 	txt: Text;
@@ -167,11 +187,11 @@ begin
 	Assign(txt, 'listado_cursadas.txt');
 	reset(arch_m);
 	rewrite(txt);
-	writeln(txt, 'CODIGO',' ', 'NOMBRE',' ', 'APELLIDO',' ', 'N° APROBADAS SIN FINAL',' ', 'N° APROBADAS CON FINAL');
+	writeln(txt, 'CODIGO','|', ' NOMBRE ','|', ' APELLIDO ','|', ' N° APROBADAS SIN FINAL ','|', ' N° APROBADAS CON FINAL ');
 	while(not eof(arch_m)) do begin
 		read(arch_m, a);
 		if(a.cantMsin >= 4) then
-			writeln(txt,a.codigo,' ',a.nombre,' ',a.apellido,' ',a.cantMsin,' ',a.cantMcon);
+			writeln(txt,a.codigo:6,'|',a.nombre:8,'|',a.apellido:10,'|',a.cantMsin:24,'|',a.cantMcon:24);
 	end;
 	close(txt);
 	close(arch_m);
@@ -208,7 +228,7 @@ begin
 		end;
 		'd':
 		begin
-		
+			imprimirDetalle(arch_d);
 		end;
 		'e': 
 		begin
