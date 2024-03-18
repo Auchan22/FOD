@@ -55,6 +55,7 @@ var
 	existe: boolean;
 begin
 	existe:= false;
+	reset(arch_m);
 	while not eof(arch_m) and not existe do begin
 		read(arch_m, p);
 		if(p.codigo = cod) then
@@ -97,7 +98,6 @@ begin
 	while(p.codigo <> -1) do begin
 		posActual:= filepos(arch_m);
 		existeProducto(arch_m, p.codigo, ok);
-		writeln(ok);
 		seek(arch_m, posActual);
 		if(not ok)then
 			write(arch_m, p)
@@ -109,10 +109,207 @@ begin
 	end;
 	close(arch_m);
 end;
+
+procedure cargarDetalles(var arr: arr_sucursales);
+	procedure leerPedido(var p: pedido);
+	begin
+		writeln('-----');
+		write('Ingrese codigo de producto: ');
+		readln(p.codigo);
+		if(p.codigo <> -1) then begin
+			write('Ingrese cantidad vendida: ');
+			readln(p.cant);
+		end;
+		writeln('-----');
+	end;
+var
+	p: pedido;
+	i: integer;
+	aux: string;
+begin
+	for i:= 1 to n do begin
+		Str(i, aux);
+		Assign(arr[i], 'detalle'+aux);
+		rewrite(arr[i]);
+		writeln('-> Cargando detalle: detalle'+aux);
+		leerPedido(p);
+		while(p.codigo <> -1) do begin
+			write(arr[i], p);
+			leerPedido(p);
+		end;
+		close(arr[i]);
+	end;
+	
+end;
+
+procedure imprimirMaestro(var arch_m: maestro);
+	procedure imprimirProducto(p: producto);
+	begin
+		writeln('-----');
+		writeln('-> Codigo: ', p.codigo);
+		writeln('-> Nombre: ', p.nombre);
+		writeln('-> Descripcion: ', p.descripcion);
+		writeln('-> Precio: ', p.precio:0:2);
+		writeln('-> Stock Actual: ', p.stockActual);
+		writeln('-> Stock Minimo: ', p.stockMin);
+		writeln('-----');
+	end;
+var
+	p: producto;
+begin
+	reset(arch_m);
+		while(not eof(arch_m)) do begin
+			read(arch_m, p);
+			imprimirProducto(p);
+		end;
+	close(arch_m);
+end;
+
+procedure imprimirDetalles(var arr: arr_sucursales);
+	procedure imprimirPedido(p: pedido);
+	begin
+		writeln('-----');
+		writeln('-> Codigo: ', p.codigo);
+		writeln('-> Cantidad Venidad: ', p.cant);
+		writeln('-----');
+	end;
+var
+	p: pedido;
+	i: integer;
+	aux: string;
+begin
+	for i:= 1 to n do begin
+		writeln('');
+		str(i, aux);
+		writeln('Imprimiendo datos de: detalle'+aux);
+		Assign(arr[i], 'detalle'+aux);
+		reset(arr[i]);
+		while(not eof(arr[i])) do begin
+			read(arr[i], p);
+			imprimirPedido(p);
+		end;
+		close(arr[i]);
+	end;
+end;
+
+procedure minimo(var arr: arr_sucursales; var min: pedido);
+var
+	i, iMin: integer;
+	aux: pedido;
+begin
+	iMin:= 0;
+	min.codigo:= valoralto;
+	for i:= 1 to n do begin
+		leer(arr[i], aux);
+		if(aux.codigo <> valoralto) then
+			if(aux.codigo < min.codigo) then begin
+				min:= aux;
+				iMin:= i;
+			end;
+	end;
+	if(iMin <> 0) then begin
+		leer(arr[iMin], min);
+	end;
+end;
+
+procedure actualizar(var arch_m: maestro; var arr: arr_sucursales);
+var
+	i: integer;
+	auxI: string;
+	p: producto;
+	min: pedido;
+	cantVendida: integer;
+	codActual: integer;
+begin
+	reset(arch_m);
+	for i:= 1 to n do begin
+		Str(i, auxI);
+		Assign(arr[i], 'detalle'+auxI);
+		reset(arr[i]);
+	end;
+	minimo(arr, min);
+	while(min.codigo <> valoralto) do begin
+		codActual:= min.codigo;
+		cantVendida:= 0;
+		writeln(min.cant,' ',min.codigo);
+		while(min.codigo = codActual) do begin
+			cantVendida:= cantVendida + min.cant;
+			minimo(arr, min);
+			writeln(min.cant,' ',min.codigo);
+		end;
+		read(arch_m, p);
+		while(p.codigo <> codActual) do
+			read(arch_m, p);
+		seek(arch_m, filepos(arch_m)-1);
+		p.stockActual:= p.stockActual - cantVendida;
+		write(arch_m, p);
+	end;
+	for i:=1 to n do
+		close (arr[i]);
+	close(arch_m);
+end;
+
+procedure ShowMenu(var arch_m: maestro);
+var
+	opc: char;
+	arr: arr_sucursales;
+begin
+	writeln('------');
+	writeln('');
+	writeln('[a] Crear archivo maestro');
+	writeln('[b] Crear archivos detalles');
+	writeln('[c] Listar maestro');
+	writeln('[d] Listar detalles');
+	writeln('[e] Actualizar maestro');
+	writeln('[f] Generar archivo de texto');
+	writeln('');
+	readln(opc);
+	writeln('OPCION ELEGIDA -->  ', opc);
+	writeln('------');
+	
+	case opc of
+		'a':
+		begin
+			cargarMaestro(arch_m);
+		end;
+		'b':
+		begin
+			cargarDetalles(arr);
+		end;
+		'c':
+		begin
+			imprimirMaestro(arch_m);
+		end;
+		'd':
+		begin
+			imprimirDetalles(arr);
+		end;
+		'e': 
+		begin
+			actualizar(arch_m, arr);
+		end;
+		'f':
+		begin
+		end;
+		else writeln('No se encuentra la opción...');
+	end;
+end;
 var
 	arch_m: maestro;
+	loop: boolean;
+	letra: char;
 BEGIN
 	Assign(arch_m, 'maestro.dat');
-	cargarMaestro(arch_m);
+	loop:= true;
+	ShowMenu(arch_m);
+	while (loop) do begin
+		write ('SI INGRESA CUALQUIER CARACTER SE DESPLEGARA NUEVAMENTE EL MENU. SI INGRESA "Z" SE CERRARA LA CONSOLA: '); readln (letra);
+		if (letra = 'Z') or (letra = 'z') then
+			loop:= false
+		else begin
+			clrscr;
+			ShowMenu(arch_m);
+		end;
+	end;
 END.
 
