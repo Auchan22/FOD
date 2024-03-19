@@ -40,6 +40,7 @@ type
 	detalle =  file of pedido;
 	
 	arr_sucursales = array[1..n] of detalle;
+	reg_pedidos = array[1..n] of pedido;
 
 procedure leer(var arch_d: detalle; var dato: pedido);
 begin
@@ -192,27 +193,25 @@ begin
 	end;
 end;
 
-procedure minimo(var arr: arr_sucursales; var min: pedido);
+procedure minimo(var arr: arr_sucursales; var reg: reg_pedidos; var min: pedido);
 var
 	i, iMin: integer;
-	aux: pedido;
 begin
 	iMin:= 0;
 	min.codigo:= valoralto;
 	for i:= 1 to n do begin
-		leer(arr[i], aux);
-		if(aux.codigo <> valoralto) then
-			if(aux.codigo < min.codigo) then begin
-				min:= aux;
+		if(reg[i].codigo <> valoralto) then
+			if(reg[i].codigo < min.codigo) then begin
+				min:= reg[i];
 				iMin:= i;
 			end;
 	end;
 	if(iMin <> 0) then begin
-		leer(arr[iMin], min);
+		leer(arr[iMin], reg[iMin]);
 	end;
 end;
 
-procedure actualizar(var arch_m: maestro; var arr: arr_sucursales);
+procedure actualizar(var arch_m: maestro; var arr: arr_sucursales; var reg: reg_pedidos);
 var
 	i: integer;
 	auxI: string;
@@ -226,15 +225,17 @@ begin
 		Str(i, auxI);
 		Assign(arr[i], 'detalle'+auxI);
 		reset(arr[i]);
+		leer(arr[i], reg[i]);
+		writeln(reg[i].codigo);
 	end;
-	minimo(arr, min);
+	minimo(arr, reg, min);
 	while(min.codigo <> valoralto) do begin
 		codActual:= min.codigo;
 		cantVendida:= 0;
 		writeln(min.cant,' ',min.codigo);
 		while(min.codigo = codActual) do begin
 			cantVendida:= cantVendida + min.cant;
-			minimo(arr, min);
+			minimo(arr, reg, min);
 			writeln(min.cant,' ',min.codigo);
 		end;
 		read(arch_m, p);
@@ -249,10 +250,30 @@ begin
 	close(arch_m);
 end;
 
+procedure generarInforme(var arch_m: maestro);
+var
+	txt: Text;
+	p: producto;
+begin
+	reset(arch_m);
+	Assign(txt, 'informe.txt');
+	rewrite(txt);
+	writeln(txt, '| CODIGO | NOMBRE | DESCRIPCION | PRECIO | STOCK ACTUAL | STOCK MINIMO |');
+	while(not eof(arch_m)) do begin
+		read(arch_m, p);
+		if(p.stockActual < p.stockMin) or (p.stockActual < 0) then begin
+			writeln(txt, '| ',p.codigo:6,' | ',p.nombre:6,' | ',p.descripcion:11, ' | ',p.precio:6:2,' | ',p.stockActual:12,' | ',p.stockMin:12,' |');
+		end;
+	end;
+	close(arch_m);
+	close(txt);
+end;
+
 procedure ShowMenu(var arch_m: maestro);
 var
 	opc: char;
 	arr: arr_sucursales;
+	reg: reg_pedidos;
 begin
 	writeln('------');
 	writeln('');
@@ -286,10 +307,11 @@ begin
 		end;
 		'e': 
 		begin
-			actualizar(arch_m, arr);
+			actualizar(arch_m, arr, reg);
 		end;
 		'f':
 		begin
+			generarInforme(arch_m);
 		end;
 		else writeln('No se encuentra la opción...');
 	end;
