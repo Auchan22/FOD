@@ -68,7 +68,7 @@ procedure generarInforme(var arch: archivo);
 var
 	a: acceso;
 	existe: boolean;
-	anio: integer;
+	anio, pos: integer;
 	tot_dia, tot_mes, tot_usr, tot: real;
 	anio_actual, mes_actual, dia_actual, usr_actual: integer;
 begin
@@ -80,14 +80,16 @@ begin
 	reset(arch);
 	leer(arch, a);
 	while(a.anio <> valoralto) and (not existe) do begin
-		if(a.anio = anio) then
-			existe:= true
+		if(a.anio = anio) then begin
+			existe:= true;
+			pos:= filepos(arch) - 1;
+		end
 		else
 			leer(arch, a);
 	end;
 	
 	if(existe) then begin
-		seek(arch, filepos(arch) - 1);
+		seek(arch, pos);
 		leer(arch, a);
 		writeln('Anio: ', a.anio);
 		anio_actual := a.anio;
