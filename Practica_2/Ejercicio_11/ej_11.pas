@@ -11,7 +11,7 @@ puede enviar cero, uno o más mails por día.
 program ej11_p2;
 uses crt;
 const
-	MAX_DIA = 31;
+	MAX_DIA = 7;
 	valoralto = 999;
 type
 	dias = 1..MAX_DIA;
@@ -151,6 +151,31 @@ begin
 	close(arch);
 end;
 
+procedure imprimirDetalles(var arr: arr_det);
+	procedure imprimirRegistro(r: reg_d);
+	begin
+		writeln('-----');
+		writeln('-> Nro Usuario: ', r.nro_usr);
+		writeln('-> Usuario destino: ', r.cuentaDestino);
+		writeln('-> Cuerpo mensaje: ', r.cuerpoMensaje);
+		writeln('-----');
+	end;
+var
+	r: reg_d;
+	i: integer;
+begin
+	for i:= 1 to MAX_DIA do begin
+		reset(arr[i]);
+		writeln('Imprimiendo dia: ', i);
+		while(not eof(arr[i])) do begin
+			read(arr[i], r);
+			imprimirRegistro(r);
+		end;
+		writeln('');
+		close(arr[i]);
+	end;
+end;
+
 procedure leer(var arch: detalle; var dato: reg_d);
 begin
 	if(not eof(arch)) then
@@ -175,7 +200,7 @@ begin
 	end;
 	
 	if(iMin <> 0) then begin
-		leer(det[iMin], reg[i]);
+		leer(det[iMin], reg[iMin]);
 	end;
 end;
 
@@ -202,6 +227,7 @@ begin
 			tot:= tot + 1;
 			minimo(reg, arr, min);
 		end;
+		writeln(tot);
 		while(r.nro_usr <> nroActual) do
 			read(arch_m, r);
 		r.cant:= r.cant + tot;
@@ -228,32 +254,54 @@ var
 	txt: Text;
 	d: reg_d;
 	r: reg_m;
-	d: integer;
+	i: integer;
 	nroActual, totActual: integer;
 begin
 	writeln('-----');
 	write('Ingrese día para generar reporte (1-31): ');
-	readln(d);
-	if(d < 1) or (d > 31) then
+	readln(i);
+	if(i < 1) or (i > 31) then
 		writeln('Ingrese un dia entre el 1 y 31')
 	else begin
-		reset(arr[d]);
+		assign(txt, 'informe-usuarios.txt');
+		rewrite(txt);
+		writeln(txt, 'DIA: ',i);
+		writeln(txt, '| NRO USUARIO | CANT. MENSAJES ENVIADOS |');
+		reset(arr[i]);
 		reset(arch_m);
 		leerMaestro(arch_m, r);
 		while r.nro_usr <> valoralto do begin
 			nroActual:= r.nro_usr;
-			read(arr[d], d);
-			//Esto es si no existe en el detalle seleccionado
-					
+			leer(arr[i], d);
+			totActual:= 0;
+			while(d.nro_usr = nroActual) do begin
+				totActual := totActual + 1;
+				leer(arr[i], d);
+			end;
+			seek(arr[i], filepos(arr[i])-1);
+			writeln(txt ,'| ',nroActual:11,' | ',totActual:22, ' |');
+			leerMaestro(arch_m, r);	
 		end;
-		close(arr[d]);
+		close(txt);
+		close(arr[i]);
 		close(arch_m);
 	end;
 	writeln('-----');
 end;
 
+var
+	arch: maestro;
+	arr: arr_det;
 BEGIN
-	
-	
+	assign(arch, 'maestro');
+	asignarDetalles(arr);
+	//inicialiarDetalles(arr);
+	//cargarMaestro(arch);
+	//imprimirMaestro(arch);
+	//cargarDetalles(arr);
+	//imprimirDetalles(arr);
+	actualizar(arch, arr); //No anda
+	imprimirMaestro(arch);
+	//generarArchivo(arch, arr);
 END.
 

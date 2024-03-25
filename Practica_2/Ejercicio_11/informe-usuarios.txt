@@ -1,0 +1,5 @@
+DIA: 6
+| NRO USUARIO | CANT. MENSAJES ENVIADOS |
+|           1 |                      2 |
+|           2 |                      0 |
+|           3 |                      1 |
