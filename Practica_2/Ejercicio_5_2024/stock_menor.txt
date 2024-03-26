@@ -1,0 +1,4 @@
+| NOMBRE |    DESCRIPCION    | STOCK DISPONIBLE | PRECIO |
+|      a |                 a |                0 |  20.00 |
+|      b |                 b |               -2 |  15.00 |
+|      c |                 c |                6 |  10.00 |

@@ -227,7 +227,7 @@ begin
 			tot:= tot + 1;
 			minimo(reg, arr, min);
 		end;
-		writeln(tot);
+		//writeln(tot);
 		while(r.nro_usr <> nroActual) do
 			read(arch_m, r);
 		r.cant:= r.cant + tot;
