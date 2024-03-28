@@ -223,16 +223,12 @@ begin
 				cantAct:= min.cant_act;
 				minimo(reg, arr, min);
 			end;
-			while(r.cod_loc <> locActual) do
-				read(arch, r);
-			while(r.cod_cepa <> cepaActual) do
+			while(r.cod_loc <> locActual) or (r.cod_cepa <> cepaActual) do
 				read(arch, r);
 			r.cant_fall := r.cant_fall + cantFall;
 			r.cant_recu := r.cant_recu + cantRecu;
 			r.cant_nuevos := cantNue;
 			r.cant_act:= cantAct;
-			
-			writeln(r.cant_fall);
 			
 			seek(arch, filepos(arch) -1);
 			write(arch, r);
@@ -282,8 +278,8 @@ BEGIN
 	//cargarMaestro(arch);
 	//cargarDetalles(arr);
 	//imprimirMaestro(arch);
-	//actualizar(arch, arr);
+	actualizar(arch, arr);
 	imprimirMaestro(arch);
-	contarCasos(arch);
+	//contarCasos(arch);
 END.
 
