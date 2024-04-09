@@ -1,0 +1,6 @@
+| CODIGO |         NOMBRE          | GENERO |
+|      1 |           Peleadores |     Accion |
+|      6 |                    a |          m |
+|      3 |                    c |      Pelea |
+|      4 |                    a | Ciencia Fi |
+|      5 |                   as |       pepe |
