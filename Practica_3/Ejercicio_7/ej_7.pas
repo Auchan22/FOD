@@ -148,14 +148,14 @@ var
 	n: integer;
 BEGIN
 	assign(a, 'maestro.data');
-	cargarArchivo(a);
+	{cargarArchivo(a);
 	clrscr;
 	readln(n);
 	imprimirArchivo(a);
 	BajaLogica(a);
 	BajaFisica(a);
 	readln(n);
-	clrscr;
+	clrscr;}
 	imprimirArchivo(a);
 END.
 
