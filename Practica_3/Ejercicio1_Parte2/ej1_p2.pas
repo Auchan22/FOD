@@ -163,7 +163,7 @@ var
 begin
 	for i:= 1 to n do begin
 		if(pos[i] <> valoralto) then begin // Si es valoralto, indica que ese archivo no tiene registros con ese codigo
-			if(pos[i] <> 0) then begin
+			if(pos[i] <> -1) then begin
 				seek(det[i], pos[i]+1) //Nos paramos en la ultima pos disponible
 			end
 			else
@@ -193,13 +193,13 @@ var
 	v: venta;
 begin
 	for i:= 1 to n do begin
-		pos[i]:= 0;
+		pos[i]:= -1;
 		reset(a[i]);
 	end;
 	reset(m);
 	leerMaestro(m, p);
 	// TODO: VER LA FORMA DE COMO IMPLEMENTAR LA ACT
-	while p.cod <> valoralto do begin
+	{while p.cod <> valoralto do begin
 		aux:= 0;
 		cantVendida:= 0;
 		i:= 1;
@@ -223,6 +223,29 @@ begin
 		leerMaestro(m, p);
 		for i:= 1 to n do
 			pos[i] := 0;
+	end;}
+	while(p.cod <> valoralto) do begin
+		aux:= 0;
+		cantVendida:= 0;
+		completarArray(a, pos, p.cod);
+		while(aux < n) do begin
+			for i:= 1 to n do begin
+				if(pos[i] = valoralto) then aux+=1
+				else begin
+					seek(a[i], pos[i]);
+					read(a[i], v);
+					cantVendida:= cantVendida + v.cantVendida;
+				end;
+			end;
+			if(aux <> n) then aux:= 0;
+			completarArray(a, pos, p.cod);
+		end;
+		p.stockActual -= cantVendida;
+		seek(m, filepos(m)-1);
+		write(m, p);
+		for i:= 1 to n do
+			pos[i]:= -1;
+		leerMaestro(m, p);
 	end;
 	for i:= 1 to n do 
 		close(a[i]);
