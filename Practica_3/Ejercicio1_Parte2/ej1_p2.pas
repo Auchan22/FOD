@@ -252,6 +252,29 @@ begin
 	close(m);
 end;
 
+procedure merge(var a: arr_det);
+var
+	i: integer;
+	codActual, cantActual: integer;
+	v, act: venta;
+	nue: detalle;
+begin
+	assign(nue, 'merge_detalles');
+	rewrite(nue);
+	for i:= 1 to n do
+		reset(a[i]);
+	for i:= 1 to n do begin
+		leerDetalle(a[i], v);
+		leerDetalle(nue, act);
+		while(act.cod <> valoralto) and (act.cod <> v.cod) do begin
+			
+		end;
+	end;
+	close(nue);
+	for i:= 1 to n do
+		close(a[i]);
+end;
+
 var
 	m: maestro;
 	a: arr_det;
