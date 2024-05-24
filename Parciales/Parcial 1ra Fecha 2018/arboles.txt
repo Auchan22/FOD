@@ -1,0 +1,49 @@
+Dado un arbol B+ de orden 4 y con politica derecha para la resolución de underflow,
+para cada operación dada debe:
+
+a. Dibujar el árbol resultante.
+b. Explicar las decisiones tomadas.
+c. Indicar las lecturas y escrituras en el orden de ocurrencia.
+
+Las operaciones a realizar son: +100, -540, -67, -422, -445, -556
+
+Estado Inicial)
+		2: 0 (241) 1(422) 3 (540) 4
+0: (3)(35)(67)1	  1:(241)(300)(329)3 	3: (422)(445)4 	4: (556)(600)-1
+
++100)
+Se intenta insertar la clave 100 en el nodo 0, se produce overflow, por lo que se divide el nodo, se crea uno nuevo nodo 5 y se promociona la copia de la clave 67 al nodo 2. Se intenta agregar la copia en el nodo 2, se produce overflow, se divide y se crea un nuevo nodo raiz 7, promocionando desde el nodo 6 la clave 422.
+
+L2, L0, EO, E5, E2, E6, E7
+			7: 2 (422) 6
+		2: 0 (67) 5 (241) 1    6: 3 (540) 4
+  0:(3)(35)5  5:(67)(100)1  1:(241)(300)(329)3  3:(422)(445)4   4:(556)(600)-1
+
+-540) No se elimina la clave ya que no se encuentra en el arbol
+L7, L6, L4
+
+-67) Se elimina la clave del nodo 5 sin problemas, manteniendo la copia en el nodo 2.
+L7, L2, L5, E5
+			7: 2 (422) 6
+		2: 0 (67) 5 (241) 1    6: 3 (540) 4
+  0:(3)(35)5  5:(100)1  1:(241)(300)(329)3  3:(422)(445)4   4:(556)(600)-1
+
+-422) Se elimina la clave del nodo 3 sin problemas
+L7,L6,L3,E3
+			7: 2 (422) 6
+		2: 0 (67) 5 (241) 1    6: 3 (540) 4
+  0:(3)(35)5  5:(100)1  1:(241)(300)(329)3  3:(445)4   4:(556)(600)-1
+
+-445) Se elimina la clave del nodo 3, provocando underflow en este. Por medio de la politica, se intenta redistribuir con su hermano adyacente derecho, lo cual es posible, redistribuyendo las claves y pasando una copia de la clave 600 al nodo 3.
+L7,L6,L3,L4,E3,E4,E6
+			7: 2 (422) 6
+		2: 0 (67) 5 (241) 1    6: 3 (600) 4
+  0:(3)(35)5  5:(100)1  1:(241)(300)(329)3  3:(556)4   4:(600)-1
+
+-556) Se elimina la clave 556 el nodo 3, provocando underflow. Se intenta redistribuir con su hermando adyacente derecho, lo cual no es posible por minimo de elementos, por lo que se fusionan los nodos, liberando el nodo 4.
+L7, L6, L3, L4, E3, E6, E2, E7
+			7: 2 (241) 6
+		2: 0 (67) 5   6: 1 (422) 3
+  0:(3)(35)5  5:(100)1  1:(241)(300)(329)3  3:(600)-1
+
+

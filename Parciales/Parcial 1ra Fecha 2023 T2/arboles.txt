@@ -1,26 +1,49 @@
+Dado un arbol B de orden 4 y con politica derecha para la resolución de underflow,
+para cada operación dada debe:
+
+a. Dibujar el árbolresultante.
+b. Explicar las decisiones tomadas.
+c. Indicar las lecturas y escrituras en el orden de ocurrencia.
+
+Las operaciones a realizar son: +260, -310, -490, -60
+
 Estado Inicial)
 		2: 0 (100) 1(310) 4 (600) 3
 0: (60)	  1:(160)(210)(240) 	4: (420)(490) 	3: (800)
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
 +260) Se inserta la clave 260 en el nodo 1, se genera overflow, por lo que se divide y se promociona la clave 240 al nodo 2. 
 En el nodo 2 se genera overflow, por lo que se divide y se promociona la clave 310 a un nuevo nodo raíz.
 L2,L1,E1,E5,E2,E6,E7
+
 			7: 2 (310) 6
 	2: 0 (100) 1 (240) 5           6: 4 (600) 3
 0:(60)	 1:(160)(210)	5:(260)     4:(420)(490)	3:(800)
 
--310) Al eliminar la clave 310, se provoca underflow en el nodo 7. Ya que la clave no esta en una hoja, se va a buscar la menor del sub-arbol derecho, siendo esta la clave 420 del nodo 4.
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-310) Al eliminar la clave 310, se provoca underflow en el nodo 7. Ya que la clave no esta en una hoja, se va a buscar la menor del sub-arbol derecho, 
+siendo esta la clave 420 del nodo 4.
 L7,L6,L4,E4,E7
+
 			7: 2 (420) 6
 	2: 0 (100) 1 (240) 5           6: 4 (600) 3
 0:(60)	 1:(160)(210)	5:(260)     4:(490)	    3:(800)
 
--490) Al eliminar la clave 490, se provoca underflow en el nodo 4. Ya que es un nodo hoja, se intenta redistribuir por medio de la política, con su hermano adyacente derecho (nodo 3). Dado que este cuenta con el mínimo y no se le puede quitar, se terminan fusionando y reacomodando, reduciendo un nivel y liberando el nodo 3 y 7.
-L7,L6,L4,L3,L6,E4,E2
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-490) Al eliminar la clave 490, se provoca underflow en el nodo 4. Ya que es un nodo hoja, se intenta redistribuir por medio de la política, con su hermano adyacente derecho (nodo 3). Dado que este cuenta con el mínimo y no se le puede quitar, se terminan fusionando y reacomodando, reduciendo un nivel y liberando el nodo 3, 6 y 7.
+L7,L6,L4,E4,E2
+
 		2: 0 (100) 1 (240) 5 (420) 4
 0:(60)	 1:(160)(210)	5:(260)     4:(600)(800)
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -60) Al eliminar la clave 60, se provoca underflow en el nodo 0. Al ser un nodo hoja, se intenta redistribuir por medio de la política, con su hermano adyacente derecho (nodo 1). Ya que se puede, se logra la redistribución.
+L2, L0, E0, E1, E2
+
 	2: 0 (160) 1 (240) 5 (420) 4
 0:(100)	 1:(210)	5:(260)     4:(600)(800)
 
