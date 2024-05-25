@@ -1,0 +1,36 @@
+Dado el siguiente árbol B+ de orden 6, mostrar cómo quedaría el mismo luego de realizar
+las siguientes operaciones: +159, -5, -190.
+Para la resolución de underflow debe utilizar política a derecha.
+
+
+                                         2: 0 (10) 1 (60) 3 (115) 4 (145) 5 (179) 6
+
+          0: (1)(5)1    1: (34)(44)3    3:(60)(113)4    4:(120)(125)(131)(139)5    5:(145)(153)(158)(160)(177)6    6:(179)(190)-1
+--------------------------------------------------------------------------------------------------------------------------------------------
++159) Se intenta insertar la clave 159 en el nodo 5, se provoca overflow. Se divide y se promociona una copia de la clave 159 al nodo 2. Se provoca overflow en el nodo 2, se divide y se promociona la clave 145 a un nuevo nodo raiz 9.
+L2,L5,E5,E7,E2,E8,E9
+
+                                                      9: 2 (145) 8
+
+				2: 0 (10) 1 (60) 3 (115) 4		8: 5 (159) 7 (179) 6
+
+          0: (1)(5)1    1: (34)(44)3    3:(60)(113)4    4:(120)(125)(131)(139)5    5:(145)(153)(158)7   7:(159)(160)(177)6    6:(179)(190)-1
+----------------------------------------------------------------------------------------------------------------------------------------------
+-5) Al intentar eliminar la clave 5 del nodo 0, se provoca underflow. Se intenta resolver por medio de la politica, con su hermano derecho, pero no se puede por el minimo de elementos, por lo que se terminan fusionando las claves 1, 34 y 44 en el nodo 0, liberando el nodo 1 y reacomodando el nodo 2.
+L9,L2,L0,E0,E2
+
+                                                      9: 2 (145) 8
+
+				2: 0 (60) 3 (115) 4		8: 5 (159) 7 (179) 6
+
+          0: (1)(34)(44)3    3:(60)(113)4    4:(120)(125)(131)(139)5    5:(145)(153)(158)7   7:(159)(160)(177)6    6:(179)(190)-1
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+-190) Se elimina la clave del nodo 6, provocando underflow en este. Se intenta resolver por medio de la politica con su hermano derecho, pero como no tiene hermano derecho, no se puede. Dado que esta en un extremo, se puede redistribuir con su hermano izquierdo.
+L9,L8,L6,L7,E7,E6,E8
+
+                                                      9: 2 (145) 8
+
+				2: 0 (60) 3 (115) 4		8: 5 (159) 7 (177) 6
+
+          0: (1)(34)(44)3    3:(60)(113)4    4:(120)(125)(131)(139)5    5:(145)(153)(158)7   7:(159)(160)6    6:(177)(179)-1
