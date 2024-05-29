@@ -1,0 +1,4 @@
+| NRO USUARIO | NOMBRE USUARIO | CANT MENSAJES |
+|           1 |              a |             3 |
+|           2 |              b |             4 |
+|           3 |              c |             0 |
