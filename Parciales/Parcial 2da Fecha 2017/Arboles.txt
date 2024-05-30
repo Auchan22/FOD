@@ -1,0 +1,18 @@
+Dado el siguiente árbol B+ de orden 4 y con política de resolución de underflows a
+derecha, realice las siguientes operaciones indicando lecturas y escrituras en el orden de
+ocurrencia. Además, debe describir detalladamente lo que sucede en cada operación. +150,
+-500.
+			2:0(340)1(400)4(500)3
+0:(11)(50)(77)1   1:(340)(350)(360)4   4:(400)(410)(420)3   3:(520)(530)-1
+------------------------------------------------------------------------------------------------
++150) Se intenta agregar la clave 150 en el nodo 0, se produce overflow, se divide y se promociona una copia de la clave 77 al nodo 2. Se produce overflow en el nodo 2, por lo que se divide, se crea un nuevo nodo raiz 7 y se promociona desde el nodo 2 la clave 400.
+L2,L0,E0,E5,E2,E6,E7
+				7:2(400)6
+		2:0(77)5(340)1			6:4(500)3
+0:(11)(50)5    5:(77)(150)1	1:(340)(350)(360)4   4:(400)(410)(420)3   3:(520)(530)-1
+------------------------------------------------------------------------------------------------
+-500) Se intenta eliminar la clave, no existe, no se hace nada.
+L7,L6,L3
+				7:2(400)6
+		2:0(77)5(340)1			6:4(500)3
+0:(11)(50)5    5:(77)(150)1	1:(340)(350)(360)4   4:(400)(410)(420)3   3:(520)(530)-1
