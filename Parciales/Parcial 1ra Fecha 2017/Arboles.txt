@@ -18,14 +18,14 @@ L8,L7,L4,E8
 			2:0(320)1(431)6   7:4(555)5(641)3
 0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(507) 5:(608)(633) 3:(790)(923)
 -------------------------------------------------------------------------------------------------------
--507) Al eliminar la clave 507 del nodo 4, se provoca underflow. No se puede redistribuir ya que no cuenta con hermano adyacente izquierdo, por lo que se fusiona con las claves 555, 608, 633 en el nodo 4, liberando el nodo 5
+-507) Al eliminar la clave 507 del nodo 4, se provoca underflow. Ya que es un caso extremo, se puede redistribuir con su hermano adyacente derecho, sin tener en cuenta la politica.
 L8,L7,L4,L5,E4,E5,E7
-			8:2(500)7
-		2:0(320)1(431)6   7:4(641)3
-0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555)(608)(633) 3:(790)(923)
+				     8:2(500)7
+			2:0(320)1(431)6   7:4(608)5(641)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555) 5:(633) 3:(790)(923)
 -------------------------------------------------------------------------------------------------------
 -608) Se elimina la clave 608 del nodo 4 sin problemas
 L8,L7,L4,E4
-				8:2(500)7
-		2:0(320)1(431)6   		7:4(641)3
-0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555)(633) 3:(790)(923)
+				     8:2(500)7
+			2:0(320)1(431)6   7:4(633)5(790)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555) 5:(641) 3:(923)
