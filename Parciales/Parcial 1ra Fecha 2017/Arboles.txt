@@ -1,0 +1,31 @@
+Dado el siguiente árbol B de orden 5, mostrar cómo quedaría el mismo luego de realizar las
+siguientes operaciones: +445, -490, -507, -608. Justificar detalladamente cada operación
+indicando lecturas y escrituras en orden de ocurrencia. Para la resolución de underflow
+debe utilizar la política a izquierda. Graficar cada operación por separado.
+
+			2: 0 (320) 1 (490) 4(555) 5(641) 3
+0: (13)(153) 1: (325)(341)(431)(460) 4: (500)(507) 5: (608)(633) 3: (790)(923)
+-------------------------------------------------------------------------------------------------------
++445) Se intenta insertar la clave 445 en el nodo 1, se produce overflow, por lo que se divide y se promociona la clave 431 al nodo 2. Se intenta insertar la clave 431 en el nodo 2, se produce overflow, se divide y se crea un nuevo nodo raiz 8, promocionando la clave 490 desde el nodo 2.
+L2,L1,E1,E6,E2,E7,E8
+				     8:2(490)7
+			2:0(320)1(431)6   7:4(555)5(641)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(500)(507) 5:(608)(633) 3:(790)(923)
+-------------------------------------------------------------------------------------------------------
+-490) Al eliminar la clave 490 del nodo 8, se provoca underflow. Ya que no es un nodo hoja, se intenta redistribuir con la menor clave de su subarbol derecho, lo cual es posible, es la clave 500
+L8,L7,L4,E8
+				     8:2(500)7
+			2:0(320)1(431)6   7:4(555)5(641)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(507) 5:(608)(633) 3:(790)(923)
+-------------------------------------------------------------------------------------------------------
+-507) Al eliminar la clave 507 del nodo 4, se provoca underflow. No se puede redistribuir ya que no cuenta con hermano adyacente izquierdo, por lo que se fusiona con las claves 555, 608, 633 en el nodo 4, liberando el nodo 5
+L8,L7,L4,L5,E4,E5,E7
+			8:2(500)7
+		2:0(320)1(431)6   7:4(641)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555)(608)(633) 3:(790)(923)
+-------------------------------------------------------------------------------------------------------
+-608) Se elimina la clave 608 del nodo 4 sin problemas
+L8,L7,L4,E4
+				8:2(500)7
+		2:0(320)1(431)6   		7:4(641)3
+0:(13)(153) 1:(325)(341) 6:(445)(460) 4:(555)(633) 3:(790)(923)
