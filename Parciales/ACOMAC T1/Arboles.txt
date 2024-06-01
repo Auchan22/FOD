@@ -1,0 +1,39 @@
+Dado un árbol B de orden 5 y con política izquierda, para cada operación dada:
+a. Dibuje el árbol resultante
+b. Explique las decisiones tomadas
+c. Escriba las lecturas y escrituras
+Operaciones: -20, +2400, -200, -1400, -1600
+
+			2:0(200)3(600)1(900)5(1200)4
+	0:(20)	3:(400)(500)	1:(700)(800)	5:(1000)(1100)	4:(1400)(1600)(1800)(2000)
+--------------------------------------------------------------------------------------------
+-20) Al eliminar la clave, se produce underflow en el nodo 0, por lo que se intenta redistribuir con su hermando adyacente iquierdo debido a la politica, pero como no tiene, no se puede. Ya que es un caso extremo, se puede redistribuir con su hermano derecho, por lo que baja la clave 200 del raiz al nodo 0 y sube la menor del derecho (400), al nodo 2.
+L2,L0,L3,E0,E3,E2
+
+			2:0(400)3(600)1(900)5(1200)4
+	0:(200)	3:(500)	1:(700)(800)	5:(1000)(1100)	4:(1400)(1600)(1800)(2000)
+--------------------------------------------------------------------------------------------
++2400) Se produce overflow en el nodo 4, por lo que se divide y se promociona la clave 1800 al nodo 2. Se produce overflow en el nodo 2, por lo que se divide, se crea un nuevo nodo raiz y se promociona la clave 900 desde el nodo 2 al nuevo nodo raiz.
+L2,L4,E4,E6,E2,E7,E8
+
+				8:2(900)7
+			2:0(400)3(600)1 7:5(1200)4(1800)6
+	0:(200)	3:(500)	1:(700)(800)	5:(1000)(1100)	4:(1400)(1600) 6:(2000)(2400)
+--------------------------------------------------------------------------------------------
+-200) Al eliminar la clave 200 del nodo 0, se produce underflow. No se puede redistribuir con izquierdo porque no existe ni con derecho por minimo, por lo que se fusiona con el nodo 3, ahora el nodo 0 tiene las claves 400 y 500, se libera el nodo 3 y se reacomodan las referencias en el nodo 2.
+L8,L2,L0,L3,E0,E3,E2
+				8:2(900)7
+			2:0(600)1 	7:5(1200)4(1800)6
+	0:(400)(500)	1:(700)(800)	5:(1000)(1100)	4:(1400)(1600) 6:(2000)(2400)
+--------------------------------------------------------------------------------------------
+-1400) Se elimina la clave sin ningun problema.
+L8,L7,L4,E4
+				8:2(900)7
+			2:0(600)1 	7:5(1200)4(1800)6
+	0:(400)(500)	1:(700)(800)	5:(1000)(1100)	4:(1600) 6:(2000)(2400)
+--------------------------------------------------------------------------------------------
+-1600) Al eliminar la clave del nodo 4, se produce underflow. Utilizando la politica y ya que existe un hermano adyacente izquierdo, se redistribuyen las claves.
+L8,L7,L4,L5,E5,E4,E7
+				8:2(900)7
+			2:0(600)1 	7:5(1100)4(1800)6
+	0:(400)(500)	1:(700)(800)	5:(1000)	4:(1200) 6:(2000)(2400)
