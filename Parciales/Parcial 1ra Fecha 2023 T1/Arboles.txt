@@ -1,0 +1,33 @@
+Dado un árbol B de orden 4 y con política izquierda, para cada operación dada:
+a. Dibuje el árbol resultante
+b. Explique las decisiones tomadas
+c. Escriba las lecturas y escrituras
+Operaciones: +25, -30, -5, -48
+
+			2:0(10)1(30)4(60)3
+	0:(5)	1:(15)(20)(23)	4:(42)(48)	3:(70)
+------------------------------------------------------------------------------------------
++25) Se inserta la clave 25 en el nodo 1, provocando underflow. Por lo que se divide el nodo y se promociona la clave 23 al nodo 2. Se propaga el overflow, por lo que se divide y se promociona la clave 30 al nuevo nodo raiz 7.
+L2,L1,E1,E5,E2,E6,E7
+			7:2(30)6
+		2:0(10)1(23)5	6:4(60)3
+	0:(5)	1:(15)(20)   5:(25)	4:(42)(48)	3:(70)
+------------------------------------------------------------------------------------------
+-30) Al eliminar la clave 30 del nodo 7, se produce underflow; el cual no es hoja, se sube la menor clave de su sub-arbol derecho, es decir, la clave 42, por lo que se redistribuyen las claves.
+L7,L6,L4,E4,E7
+			7:2(42)6
+		2:0(10)1(23)5	6:4(60)3
+	0:(5)	1:(15)(20)   5:(25)	4:(48)	3:(70)
+------------------------------------------------------------------------------------------
+-5) Cuando se elimina la clave 5 del nodo 0, se produce underflow en este, por lo que se intenta distribuir con su hermano izquierdo por medio de la politica pero no se pued. Ya que es un nodo extremo, se intenta redistribuir con su adyacente derecho, lo cual es posible ya que supera el minimo de claves.
+L7,L2,L0,L1,E0,E1,E2
+			7:2(42)6
+		2:0(15)1(23)5	6:4(60)3
+	0:(10)	1:(20)   5:(25)	4:(48)	3:(70)
+------------------------------------------------------------------------------------------
+-48) Cuando se elimina la clave 48 del nodo 4, este queda en underflow, por lo que se intenta redistribuir. No se puede con izq ni derecho por minimo, por lo que se fusiona con su nodo 3. Esto propaga underflow al nodo 6, dado que no es hoja, se intenta redistribuir con su hermano adyacente izquierdo, lo cual es posible, y se redistribuyen las claves.
+En el proceso de fusión se libera el nodo 3.
+L7,L6,L4,L3,E4,E6,L2,E2,E7
+			    7:2(23)6
+		2:0(15)1		6:5(42)4
+	0:(10)		1:(20)       5:(25)	 4:(60)(70)
