@@ -1,0 +1,31 @@
+Dado un árbol B+ de orden 4 y con política derecha, para cada operación dada:
+a. Dibuje el árbol resultante
+b. Explique las decisiones tomadas
+c. Escriba las lecturas y escrituras
+Operaciones: +58, -403, +260, -550
+		4:0(240)1(403)2(500)3
+0:(3)(45)(60)1	1:(240)(255)(360)2	2:(409)(420)3	3:(550)-1
+-----------------------------------------------------------------------------------------------
++58) Se intenta insertar la clave 58 en el nodo 0, se produce overflow, se divide y se promociona una copia de la clave 58 al nodo 4. Se intenta insertar la clave 58 en el nodo 4, se produce overflow, se divide y se crea un nuevo nodo raiz, con la clave 403 que promociona del nodo 4.
+L4,L0,E0,E5,E4,E6,E7
+			7:4(403)6
+	4:0(58)5(240)1		6:2(500)3
+0:(3)(45)	5:(58)(60)1	1:(240)(255)(360)2	2:(409)(420)3	3:(550)-1
+-----------------------------------------------------------------------------------------------
+-403) Se intenta eliminar la clave 403 del arbol, dado que no existe, no se elimina.
+L7,l6,l2
+				7:4(403)6
+		4:0(58)5(240)1			6:2(500)3
+0:(3)(45)	5:(58)(60)1	1:(240)(255)(360)2	2:(409)(420)3	3:(550)-1
+-----------------------------------------------------------------------------------------------
++260) Se intenta insertar la clave 260 en el nodo 1, se produce overflow, se divide y se promociona una copia de la clave 260 al nodo 4.
+L7,L4,L1,E1,E8,E4
+				7:4(403)6
+		4:0(58)5(240)1(260)8			6:2(500)3
+0:(3)(45)	5:(58)(60)1	1:(240)(255)8   8:(260)(360)2	2:(409)(420)3	3:(550)-1
+-----------------------------------------------------------------------------------------------
+-550) Se puede por ser extremo.
+L7,L6,L3,L2,E2,E3,E6
+				7:4(403)6
+		4:0(58)5(240)1(260)8			6:2(420)3
+0:(3)(45)	5:(58)(60)1	1:(240)(255)8   8:(260)(360)2	2:(409)3	3:(420)-1
